@@ -5,21 +5,14 @@
 using namespace daisy;
 using namespace daisysp;
 
-// Define the frequencies for twelve keys chromatically
-double scale[] = {
-    261.63, // C
-    277.18, // C#
-    293.66, // D
-    311.13, // D#
-    329.63, // E
-    349.23, // F
-    369.99, // F#
-    392.00, // G
-    415.30, // G#
-    440.00, // A
-    466.16, // A#
-    493.88  // B
-};
+// Define the frequencies for the two octaves surrounding middle C
+double scale[][12] = {
+    // Octave below middle C
+    {130.81, 138.59, 146.83, 155.56, 164.81, 174.61, 185.00, 196.00, 207.65, 220.00, 233.08, 246.94},
+    // Middle C and the octave above
+    {261.63, 277.18, 293.66, 311.13, 329.63, 349.23, 369.99, 392.00, 415.30, 440.00, 466.16, 493.88},
+    // Octave above middle C
+    {523.25, 554.37, 587.33, 622.25, 659.26, 698.46, 739.99, 783.99, 830.61, 880.00, 932.33, 987.77}};
 
 DaisySeed hw;
 Mpr121I2C mpr121;
@@ -91,11 +84,11 @@ int main(void)
         switch (touched)
         {
         case 0:
-            osc.SetFreq(scale[0]);
+            osc.SetFreq(scale[0][0]);
             break;
         
         case 1:
-            osc.SetFreq(scale[1]);
+            osc.SetFreq(scale[0][1]);
             break;
         
         default:
