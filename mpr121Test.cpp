@@ -20,6 +20,7 @@ void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, s
 int main(void)
 {
 	hw.Init();
+    hw.StartLog();
 	hw.SetAudioBlockSize(4); // number of samples handled per callback
 	hw.SetAudioSampleRate(SaiHandle::Config::SampleRate::SAI_48KHZ);
 	hw.StartAudio(AudioCallback);
@@ -28,8 +29,8 @@ int main(void)
     Mpr121I2C::Config mprConfig;
     mprConfig.transport_config.periph = I2CHandle::Config::Peripheral::I2C_1;
     mprConfig.transport_config.speed = I2CHandle::Config::Speed::I2C_400KHZ;
-    mprConfig.transport_config.scl = Pin(seed::D13);  // Replace with your SCL pin
-    mprConfig.transport_config.sda = Pin(seed::D14);  // Replace with your SDA pin
+    mprConfig.transport_config.scl = Pin(PORTB,6);  // Replace with your SCL pin
+    mprConfig.transport_config.sda = Pin(PORTB,7);  // Replace with your SDA pin
 
 	// Set additional MPR121 configuration if needed
     mprConfig.touch_threshold = 12;
