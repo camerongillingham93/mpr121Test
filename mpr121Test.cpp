@@ -18,13 +18,23 @@ DaisySeed hw;
 Mpr121I2C mpr121;
 Oscillator osc;
 
-void AudioCallback(AudioHandle::InputBuffer in, AudioHandle::OutputBuffer out, size_t size)
+
+static void AudioCallback(AudioHandle::InterleavingInputBuffer  in,
+                          AudioHandle::InterleavingOutputBuffer out,
+                          size_t                                size)
 {
-	for (size_t i = 0; i < size; i++)
-	{
-		out[0][i] = in[0][i];
-		out[1][i] = in[1][i];
-	}
+    float sig;
+    for(size_t i = 0; i < size; i += 2)
+    {
+        sig = osc.Process();
+
+        // left out
+        out[i] = sig;
+
+        // right out
+        out[i + 1] = sig;
+    }
+
 }
 
 int main(void)
@@ -53,7 +63,7 @@ int main(void)
     osc.Init(samplerate);
     osc.SetWaveform(osc.WAVE_SIN);
     osc.SetAmp(1.f);
-    osc.SetFreq(440);
+    //osc.SetFreq(440);
 
 	if(mpr121.Init(mprConfig) != Mpr121I2C::OK)
     {
@@ -90,7 +100,18 @@ int main(void)
         case 1:
             osc.SetFreq(scale[0][1]);
             break;
-        
+        case 2:
+            osc.SetFreq(scale[0][2]);
+            break;
+        case 3:
+            osc.SetFreq(scale[0][3]);
+            break;
+        case 4:
+            osc.SetFreq(scale[0][5]);
+            break;
+        case 5:
+            osc.SetFreq(scale[0][7]);
+            break;
         default:
             break;
         }
