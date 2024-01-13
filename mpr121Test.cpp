@@ -5,6 +5,9 @@
 using namespace daisy;
 using namespace daisysp;
 
+uint16_t currTouched;
+uint16_t lastTouched;
+
 // Define the frequencies for the two octaves surrounding middle C
 double scale[][12] = {
     // Octave below middle C
@@ -79,19 +82,25 @@ int main(void)
 	while(1) 
 	{
 		// Read touch status
-        uint16_t touched = mpr121.Touched();
+        currTouched = mpr121.Touched();
 
         // Process the touch status as needed
         for(int i = 0; i < 12; i++)
         {
-            if(touched & (1 << i))
+            if((currTouched & (1 << i)) && !(lastTouched& (1 << i)))
             {
                 // Channel i is touched, print the channel number
                 hw.PrintLine("Channel %d touched", i);
             }
+            if(!(currTouched & (1 << i)) && (lastTouched& (1 << i)))
+            {
+                // Channel i is released, print the channel number
+                hw.PrintLine("Channel %d released", i);
+            }
         }
+        lastTouched = currTouched;
 
-        switch (touched)
+        switch (currTouched)
         {
         case 0:
             osc.SetFreq(scale[0][0]);
